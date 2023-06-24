@@ -68,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
                 UnChecked -> UNPIN
                  */
 
-                String quote = null;
-                String author = null;
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 if (isChecked) {
                     // Store quote somewhere
@@ -77,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
                     editor.putString("author", tvStartActAuthor.getText().toString());
                 }else {
                     // Remove the stored quote
-                    getRandomQuote();
+                    editor.putString("quote",null);
+                    editor.putString("author",null);
                 }
-                editor.putString("quote",quote);
-                editor.putString("author",author);
-                editor.apply();
+
+                editor.commit();
             }
         });
 
