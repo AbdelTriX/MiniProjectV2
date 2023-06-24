@@ -5,10 +5,17 @@ import static android.content.ContentValues.TAG;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -27,12 +34,17 @@ import org.json.JSONObject;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     TextView tvSartActQuote, tvStartActAuthor;
     Button btnStartActPass;
     ToggleButton tbStartActPinUnpin;
     SharedPreferences sharedPreferences;
+    Spinner spinner;
+    private int selectedColorPosition = 0;
+
+    private String[] colors = {"Default", "LightSalmon", "Plum", "PaleGreen", "CornFlowerBlue"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +54,17 @@ public class MainActivity extends AppCompatActivity {
         tvSartActQuote = findViewById(R.id.tvStartActQuote);
         tvStartActAuthor = findViewById(R.id.tvActAuthor);
         btnStartActPass = findViewById(R.id.btnStartActPass);
+        spinner = findViewById(R.id.spActColors);
         tbStartActPinUnpin = findViewById(R.id.tbStartActPinUnpin);
+
 
         sharedPreferences = getSharedPreferences("pinned-quote", MODE_PRIVATE);
         String quote = sharedPreferences.getString("quote",null);
         String author = sharedPreferences.getString("author", null);
+        selectedColorPosition = sharedPreferences.getInt("color_position", 0);
+
+
+
 
 
 
@@ -56,8 +74,19 @@ public class MainActivity extends AppCompatActivity {
             tvSartActQuote.setText(quote);
             tvStartActAuthor.setText(author);
             tbStartActPinUnpin.setChecked(true);
-
+            setSpinnerSelection(selectedColorPosition);
+            setActivityBackgroundColor(selectedColorPosition);
         }
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, colors);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(selectedColorPosition); // Set the empty selection
+        spinner.setOnItemSelectedListener(this);
+
+
+
 
 
         tbStartActPinUnpin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -73,14 +102,19 @@ public class MainActivity extends AppCompatActivity {
                     // Store quote somewhere
                     editor.putString("quote", tvSartActQuote.getText().toString());
                     editor.putString("author", tvStartActAuthor.getText().toString());
+                    editor.putInt("color_position", spinner.getSelectedItemPosition());
+
                 }else {
                     // Remove the stored quote
                     editor.putString("quote",null);
                     editor.putString("author",null);
+                    editor.remove("color_position");
                 }
 
-                editor.commit();
+                editor.apply();
+
             }
+
         });
 
         btnStartActPass.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +123,47 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+    private void setSpinnerSelection(int position) {
+        spinner.setSelection(position);
+    }
+    private void setActivityBackgroundColor(int position) {
+        int backgroundColor;
+        switch (position) {
+            case 0:
+                backgroundColor = Color.WHITE;
+                break;
+            case 1:
+                backgroundColor = getResources().getColor(R.color.LightSalmon);
+                break;
+            case 2:
+                backgroundColor = getResources().getColor(R.color.Plum);
+                break;
+            case 3:
+                backgroundColor = getResources().getColor(R.color.PaleGreen);
+                break;
+            case 4:
+                backgroundColor = getResources().getColor(R.color.CornflowerBlue);
+                break;
+            default:
+                backgroundColor = Color.WHITE;
+                break;
+        }
+        getWindow().getDecorView().setBackgroundColor(backgroundColor);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        setActivityBackgroundColor(position);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("color_position", position);
+        editor.apply();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     private void getRandomQuote() {
@@ -118,4 +193,7 @@ public class MainActivity extends AppCompatActivity {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+
+
+
 }
