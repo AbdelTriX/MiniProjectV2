@@ -13,11 +13,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,32 +42,28 @@ public class MainActivity extends AppCompatActivity {
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://dummyjson.com/quotes/random";
+
+        int randomQuote = ThreadLocalRandom.current().nextInt(25, 81);
+        String url = "https://dummyjson.com/quotes/"+randomQuote;
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            tvSartActQuote.setText(jsonObject.getString("quote"));
-                            tvStartActAuthor.setText(jsonObject.getString("author"));
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+        JsonObjectRequest stringRequest = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    tvSartActQuote.setText(response.getString("quote"));
+                    tvStartActAuthor.setText(response.getString("author"));
 
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        tvSartActQuote.setText("That didn't work!");
-                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
         });
-        // Set the tag on the request.
-        stringRequest.setTag(TAG);
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
