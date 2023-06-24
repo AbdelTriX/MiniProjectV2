@@ -4,25 +4,35 @@ import static android.content.ContentValues.TAG;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView tvSartActQuote, tvStartActAuthor;
     Button btnStartActPass;
+    ToggleButton tbStartActPinUnpin;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,41 +42,48 @@ public class MainActivity extends AppCompatActivity {
         tvSartActQuote = findViewById(R.id.tvStartActQuote);
         tvStartActAuthor = findViewById(R.id.tvActAuthor);
         btnStartActPass = findViewById(R.id.btnStartActPass);
+        tbStartActPinUnpin = findViewById(R.id.tbStartActPinUnpin);
 
-//        tvSartActQuote.setText("You miss 100% of the shots you don’t take.");
-//        tvStartActAuthor.setText("Wayne Gretzky");
+        sharedPreferences = getSharedPreferences("pinned-quote", MODE_PRIVATE);
+        String quote = sharedPreferences.getString("quote",null);
+        String author = sharedPreferences.getString("author", null);
 
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://dummyjson.com/quotes/random";
 
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            tvSartActQuote.setText(jsonObject.getString("quote"));
-                            tvStartActAuthor.setText(jsonObject.getString("author"));
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
 
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        tvSartActQuote.setText("That didn't work!");
-                    }
+        if (quote == null) {
+            getRandomQuote();
+        } else {
+            tvSartActQuote.setText(quote);
+            tvStartActAuthor.setText(author);
+            tbStartActPinUnpin.setChecked(true);
+
+        }
+
+
+        tbStartActPinUnpin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                /*
+                Checked -> PIN
+                UnChecked -> UNPIN
+                 */
+
+                String quote = null;
+                String author = null;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if (isChecked) {
+                    // Store quote somewhere
+                    editor.putString("quote", tvSartActQuote.getText().toString());
+                    editor.putString("author", tvStartActAuthor.getText().toString());
+                }else {
+                    // Remove the stored quote
+                    getRandomQuote();
+                }
+                editor.putString("quote",quote);
+                editor.putString("author",author);
+                editor.apply();
+            }
         });
-        // Set the tag on the request.
-        stringRequest.setTag(TAG);
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
 
         btnStartActPass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,5 +91,33 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void getRandomQuote() {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "https://dummyjson.com/quotes/random";
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest stringRequest = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    tvSartActQuote.setText(response.getString("quote"));
+                    tvStartActAuthor.setText(response.getString("author"));
+
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 }
