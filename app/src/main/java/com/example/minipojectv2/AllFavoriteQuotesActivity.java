@@ -6,6 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
 import android.os.RecoverySystem;
 
 import com.example.minipojectv2.adapters.FavoriteQuotesAdapter;
@@ -33,6 +39,6 @@ public class AllFavoriteQuotesActivity extends AppCompatActivity {
 
         FavoriteQuotesAdapter adapter = new FavoriteQuotesAdapter(db.getAll());
         rvAllFavQuotesActList.setAdapter(adapter);
-        rvAllFavQuotesActList.setLayoutManager(new LinearLayoutManager(this));
+        rvAllFavQuotesActList.setLayoutManager(new GridLayoutManager(this, 2));
     }
 }
