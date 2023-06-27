@@ -32,20 +32,20 @@
         android:gravity="center"
         android:text="Author"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnStartActPass"
+        app:layout_constraintBottom_toTopOf="@+id/btnStartActShowAllFavQuotes"
         app:layout_constraintEnd_toStartOf="@+id/ivStartActIsFavorite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvStartActQuote"
         app:layout_constraintVertical_bias="0.5" />
 
     <Button
-        android:id="@+id/btnStartActPass"
+        android:id="@+id/btnStartActShowAllFavQuotes"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Pass"
+        android:text="Show All Favorite Quotes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
