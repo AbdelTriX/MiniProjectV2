@@ -1,6 +1,6 @@
 package com.example.minipojectv2.adapters;
 
-
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +41,9 @@ public class FavoriteQuotesAdapter extends RecyclerView.Adapter<FavoriteQuotesAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvFavQuoteItemInfos.setText(quotes.get(position).toString());
+        Quote quote = quotes.get(position);
+
+        holder.tvFavQuoteItemInfos.setText(quote.infos());
     }
 
     @Override
