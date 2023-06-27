@@ -1,5 +1,6 @@
 package com.example.minipojectv2.adapters;
 
+import android.graphics.Color;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,11 @@ public class FavoriteQuotesAdapter extends RecyclerView.Adapter<FavoriteQuotesAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Quote quote = quotes.get(position);
+
+        if (position % 2 == 0)
+            holder.itemView.setBackgroundColor(Color.parseColor("#B799FF"));
+        else
+            holder.itemView.setBackgroundColor(Color.parseColor("#E6FFFD"));
 
         holder.tvFavQuoteItemInfos.setText(quote.infos());
     }
