@@ -2,50 +2,51 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="MainActivity">
 
     <TextView
         android:id="@+id/tvStartActQuote"
-        android:layout_width="339dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="313dp"
+        android:layout_height="21dp"
         android:gravity="center"
         android:text="Quote"
-        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/tvStartActAuthor"
         app:layout_constraintEnd_toStartOf="@+id/ivStartActIsFavorite"
+        app:layout_constraintHorizontal_bias="0.277"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStartActId"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tvStartActAuthor"
-        android:layout_width="339dp"
+        android:layout_width="313dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
         android:gravity="center"
         android:text="Author"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnStartActShowAllFavQuotes"
-        app:layout_constraintEnd_toStartOf="@+id/ivStartActIsFavorite"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvStartActQuote"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tvStartActQuote"
         app:layout_constraintTop_toBottomOf="@+id/tvStartActQuote"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintVertical_bias="0.225"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
-        android:id="@+id/btnStartActShowAllFavQuotes"
-        android:layout_width="0dp"
+        android:id="@+id/pass"
+        android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Show All Favorite Quotes"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="16dp"
+        android:text="Pass"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -56,10 +57,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:checked="false"
+        android:checked="true"
         android:text="ToggleButton"
-        android:textOff="Pin"
-        android:textOn="Unpin"
+        android:textOff="Unpin"
+        android:textOn="Pin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -68,24 +69,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:src="@drawable/dislike"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/pass"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tbStartActPinUnpin"
+        app:layout_constraintVertical_bias="0.5"
+        app:srcCompat="@drawable/dislike" />
 
     <TextView
-        android:id="@+id/tvStartActId"
+        android:id="@+id/tvStartActid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Id"
-        android:textColor="#716F6F"
+        android:layout_marginBottom="16dp"
+        android:textColor="#9A9A9A"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/tvStartActQuote"
         app:layout_constraintEnd_toStartOf="@+id/ivStartActIsFavorite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
         app:layout_constraintVertical_chainStyle="packed" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/tbStartActPinUnpin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,5 @@
 package com.example.minipojectv2.models;
 
-import android.text.Spannable;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -43,6 +41,6 @@ public class Quote {
     @NonNull
     @Override
     public String toString() {
-        return String.format("[Quote %d] %s\n%s", getId(), getQuote(), getAuthor());
+        return String.format("Quote %d , %s , %s",id,quote,author);
     }
 }
