@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">MiniPojectV2</string>
+        <string-array name = "colors_names">
+            <item>Default</item>
+            <item>LightSalmon</item>
+            <item>Plum</item>
+            <item>PaleGreen</item>
+            <item>CornflowerBlue</item>
+
+        </string-array>>
+        <string-array name = "colors_codes">
+            <item>#FFFFFF</item>
+            <item>#FFA07A</item>
+            <item>#DDA0DD</item>
+            <item>#98FB98</item>
+            <item>#6495ED</item>
+
+        </string-array>>
+
 </resources>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -16,16 +15,16 @@ import java.util.ArrayList;
 public class FavoriteQuotesDbOpenHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Quotes.db";
-    private static final String SQL_CREATE_FAVORITE_QUOTES = String.format("CREATE TABLE %s (" +
-                    "%s INTEGER PRIMARY KEY," +
-                    "%s TEXT," +
+    public static final String SQL_CREATE_FAVORITE_QUOTES = String.format("CREATE TABLE %s (" +
+                    "%s INTEGER PRIMARY KEY, " +
+                    "%s TEXT, " +
                     "%s TEXT)",
             FavoriteQuotesContract.Infos.TABLE_NAME,
             FavoriteQuotesContract.Infos.COLUMN_NAME_ID,
             FavoriteQuotesContract.Infos.COLUMN_NAME_QUOTE,
             FavoriteQuotesContract.Infos.COLUMN_NAME_AUTHOR);
-    private static final String SQL_DELETE_FAVORITE_QUOTES = String.format("DROP TABLE IF EXISTS %s",
-            FavoriteQuotesContract.Infos.TABLE_NAME);
+    public static final String SQL_DELETE_FAVORITE_QUOTES =
+            "DROP TABLE IF EXISTS " + FavoriteQuotesContract.Infos.TABLE_NAME;
 
     public FavoriteQuotesDbOpenHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,87 +41,78 @@ public class FavoriteQuotesDbOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    private void add(int id, String quote, String author) {
-        SQLiteDatabase db = FavoriteQuotesDbOpenHelper.this.getWritableDatabase();
+    public void add(int id,String quote,String author ){
+        SQLiteDatabase db= FavoriteQuotesDbOpenHelper.this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(FavoriteQuotesContract.Infos.COLUMN_NAME_ID, id);
-        values.put(FavoriteQuotesContract.Infos.COLUMN_NAME_QUOTE, quote);
-        values.put(FavoriteQuotesContract.Infos.COLUMN_NAME_AUTHOR, author);
+        values.put(FavoriteQuotesContract.Infos.COLUMN_NAME_ID,id);
+        values.put(FavoriteQuotesContract.Infos.COLUMN_NAME_QUOTE,quote);
+        values.put(FavoriteQuotesContract.Infos.COLUMN_NAME_AUTHOR,author);
 
-        db.insert(FavoriteQuotesContract.Infos.TABLE_NAME, null, values);
+        db.insert(FavoriteQuotesContract.Infos.TABLE_NAME,null,values);
     }
-
-    public void add(Quote quote) {
+    public void Add(Quote quote){
         add(quote.getId(), quote.getQuote(), quote.getAuthor());
     }
 
-    public void delete(int id) {
+    public void delete(int id){
         SQLiteDatabase db = FavoriteQuotesDbOpenHelper.this.getWritableDatabase();
-
-        String selection = FavoriteQuotesContract.Infos.COLUMN_NAME_ID + " = ?";
-
+        String selection =  FavoriteQuotesContract.Infos.COLUMN_NAME_ID + " = ? ";
         String[] selectionArgs = {Integer.toString(id)};
-
-        db.delete(FavoriteQuotesContract.Infos.TABLE_NAME, selection, selectionArgs);
+        db.delete(FavoriteQuotesContract.Infos.TABLE_NAME, selection,selectionArgs
+        );
     }
-
-    public ArrayList<Quote> getAll() {
+    public ArrayList<Quote> getAll(){
         ArrayList<Quote> quotes = new ArrayList<>();
         SQLiteDatabase db = FavoriteQuotesDbOpenHelper.this.getReadableDatabase();
-
-        String[] projection = {
+        String Cursour ;
+        String [] project = {
                 FavoriteQuotesContract.Infos.COLUMN_NAME_ID,
                 FavoriteQuotesContract.Infos.COLUMN_NAME_QUOTE,
                 FavoriteQuotesContract.Infos.COLUMN_NAME_AUTHOR
         };
-
-        Cursor cursor = db.query(
+        Cursor cursour = db.query(
                 FavoriteQuotesContract.Infos.TABLE_NAME,
-                projection,
+                project,
                 null,
                 null,
                 null,
                 null,
-                null
-        );
+                null,
+                null);
+        while (cursour.moveToNext()){
+            int id = cursour.getInt(cursour.getColumnIndexOrThrow(FavoriteQuotesContract.Infos.COLUMN_NAME_ID));
+            String quote = cursour.getString(cursour.getColumnIndexOrThrow(FavoriteQuotesContract.Infos.COLUMN_NAME_QUOTE));
+            String author = cursour.getString(cursour.getColumnIndexOrThrow(FavoriteQuotesContract.Infos.COLUMN_NAME_AUTHOR));
 
-        while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteQuotesContract.Infos.COLUMN_NAME_ID));
-            String quote = cursor.getString(cursor.getColumnIndexOrThrow(FavoriteQuotesContract.Infos.COLUMN_NAME_QUOTE));
-            String author = cursor.getString(cursor.getColumnIndexOrThrow(FavoriteQuotesContract.Infos.COLUMN_NAME_AUTHOR));
-
-            quotes.add(new Quote(id, quote, author));
+            quotes.add(new Quote(id,quote,author));
         }
-
-        cursor.close();
-
+        cursour.close();
         return quotes;
     }
-
-    public boolean isFavorite(int id) {
+    public boolean isFavorite (int id){
         SQLiteDatabase db = FavoriteQuotesDbOpenHelper.this.getReadableDatabase();
-
-        String[] projection = {FavoriteQuotesContract.Infos.COLUMN_NAME_ID};
-
-        String selection = FavoriteQuotesContract.Infos.COLUMN_NAME_ID + " = ?";
-
-        String[] selectionArgs = {Integer.toString(id)};
-
-        Cursor cursor = db.query(
+        String [] project = {
+                FavoriteQuotesContract.Infos.COLUMN_NAME_ID,
+        };
+        String selection = FavoriteQuotesContract.Infos.COLUMN_NAME_ID +"= ?";
+        String [] selectionArgs = {Integer.toString(id)};
+        Cursor cursour = db.query(
                 FavoriteQuotesContract.Infos.TABLE_NAME,
-                projection,
+                project,
                 selection,
                 selectionArgs,
                 null,
                 null,
+                null,
                 null
         );
-
-        boolean state = cursor.moveToNext();
-
-        cursor.close();
-
+        boolean state = cursour.moveToNext();
+        cursour.close();
         return state;
     }
+
+
+
 }
+
