@@ -1,23 +1,21 @@
 package com.example.minipojectv2;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.minipojectv2.db.FavoriteQuotesDbOpenHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,6 +89,19 @@ public class MainActivity extends AppCompatActivity {
 
             isFavorite = !isFavorite;
         });
+
+        //region ToDelete : Just for test
+
+        FavoriteQuotesDbOpenHelper db = new FavoriteQuotesDbOpenHelper(this);
+//        db.add(1, "q1", "a1");
+//        db.add(2, "q2", "a2");
+//        db.add(3, "q3", "a3");
+
+        db.delete(20);
+
+        db.getAll();
+
+        //endregion
 
         //endregion
 
