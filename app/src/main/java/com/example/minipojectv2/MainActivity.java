@@ -1,7 +1,11 @@
 package com.example.minipojectv2;
 
+
+import static com.google.android.material.color.utilities.MaterialDynamicColors.error;
+import androidx.activity.OnBackPressedDispatcherOwner;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,8 +24,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.minipojectv2.db.FavoriteQuotesDbOpenHelper;
 import com.example.minipojectv2.models.Quote;
+import com.example.minipojectv2.db.FavoriteQuotesDbOpenHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         db = new FavoriteQuotesDbOpenHelper(this);
 
+
         ivStartActIsFavorite.setOnClickListener(v -> {
             int id = Integer.parseInt(tvStartActId.getText().toString().substring(1));
 
@@ -139,9 +144,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            tvStartActId.setText(String.format("#%d", response.getInt("id")));
-                            tvStartActQuote.setText(response.getString("quote"));
-                            tvStartActAuthor.setText(response.getString("author"));
+                            int id = response.getInt("id");
+                            String quote = response.getString("quote");
+                            String author = response.getString("author");
+
+                            // Check if the quote is already in favorites
+                            if (db.isQuoteFavorite(id)) {
+                                ivStartActIsFavorite.setImageResource(R.drawable.like);
+                                isFavorite = true;
+                            } else {
+                                ivStartActIsFavorite.setImageResource(R.drawable.dislike);
+                                isFavorite = false;
+                            }
+
+                            tvStartActId.setText(String.format("#%d", id));
+                            tvStartActQuote.setText(quote);
+                            tvStartActAuthor.setText(author);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -155,5 +173,14 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         queue.add(jsonObjectRequest);
+    }
+
+
+
+    //endregion
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
