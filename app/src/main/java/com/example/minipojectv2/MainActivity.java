@@ -4,21 +4,29 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.minipojectv2.db.FavoriteQuotesDbOpenHelper;
+import com.example.minipojectv2.models.Quote;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     TextView tvStartActQuote, tvStartActAuthor;
@@ -27,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     ImageView ivStartActIsFavorite;
     boolean isFavorite = false;
+    FavoriteQuotesDbOpenHelper db;
+    TextView tvStartActId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +48,20 @@ public class MainActivity extends AppCompatActivity {
         btnStartActPass = findViewById(R.id.btnStartActPass);
         tbStartActPinUnpin = findViewById(R.id.tbStartActPinUnpin);
         ivStartActIsFavorite = findViewById(R.id.ivStartActIsFavorite);
+        tvStartActId = findViewById(R.id.tvStartActId);
 
         //region Pin | Unpin Quote
 
-        sharedPreferences = getSharedPreferences("pinned-quote", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("pinned-pinnedQuote", MODE_PRIVATE);
 
-        String quote = sharedPreferences.getString("quote", null);
+        String pinnedQuote = sharedPreferences.getString("pinnedQuote", null);
 
-        if (quote == null) {
+        if (pinnedQuote == null) {
             getRandomQuote();
         } else {
             String author = sharedPreferences.getString("author", null);
 
-            tvStartActQuote.setText(quote);
+            tvStartActQuote.setText(pinnedQuote);
             tvStartActAuthor.setText(author);
 
             tbStartActPinUnpin.setChecked(true);
@@ -70,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     getRandomQuote();
                 }
 
-                editor.putString("quote", quote);
+                editor.putString("pinnedQuote", quote);
                 editor.putString("author", author);
 
                 editor.commit();
@@ -81,27 +92,35 @@ public class MainActivity extends AppCompatActivity {
 
         //region Like | Dislike Quote
 
+        db = new FavoriteQuotesDbOpenHelper(this);
+
         ivStartActIsFavorite.setOnClickListener(v -> {
-            if (isFavorite)
+            int id = Integer.parseInt(tvStartActId.getText().toString().substring(1));
+
+            if (isFavorite) {
                 ivStartActIsFavorite.setImageResource(R.drawable.dislike);
-            else
+
+                db.delete(id);
+            } else {
                 ivStartActIsFavorite.setImageResource(R.drawable.like);
 
+                String quote = tvStartActQuote.getText().toString();
+                String author = tvStartActAuthor.getText().toString();
+
+                db.add(new Quote(id, quote, author));
+            }
+
             isFavorite = !isFavorite;
+
+            //region ToDelete
+
+            ArrayList<Quote> quotes = db.getAll();
+            for (Quote quote : quotes) {
+                Log.e("SQLite", quote.toString());
+            }
+
+            //endregion
         });
-
-        //region ToDelete : Just for test
-
-        FavoriteQuotesDbOpenHelper db = new FavoriteQuotesDbOpenHelper(this);
-//        db.add(1, "q1", "a1");
-//        db.add(2, "q2", "a2");
-//        db.add(3, "q3", "a3");
-
-        db.delete(20);
-
-        db.getAll();
-
-        //endregion
 
         //endregion
 
@@ -120,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            tvStartActId.setText(String.format("#%d", response.getInt("id")));
                             tvStartActQuote.setText(response.getString("quote"));
                             tvStartActAuthor.setText(response.getString("author"));
                         } catch (JSONException e) {

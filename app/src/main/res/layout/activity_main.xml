@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity">
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/tvStartActQuote"
-        android:layout_width="0dp"
+        android:layout_width="339dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:gravity="center"
         android:text="Quote"
@@ -18,13 +19,12 @@
         app:layout_constraintBottom_toTopOf="@+id/tvStartActAuthor"
         app:layout_constraintEnd_toStartOf="@+id/ivStartActIsFavorite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toBottomOf="@+id/tvStartActId"
+        app:layout_constraintVertical_bias="0.5" />
 
     <TextView
         android:id="@+id/tvStartActAuthor"
-        android:layout_width="0dp"
+        android:layout_width="339dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
@@ -32,7 +32,7 @@
         android:gravity="center"
         android:text="Author"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnStartActPass"
         app:layout_constraintEnd_toStartOf="@+id/ivStartActIsFavorite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvStartActQuote"
@@ -72,5 +72,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvStartActId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Id"
+        android:textColor="#716F6F"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvStartActQuote"
+        app:layout_constraintEnd_toStartOf="@+id/ivStartActIsFavorite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
