@@ -2,15 +2,15 @@ package com.example.minipojectv2.models;
 
 import android.graphics.Color;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
+import android.text.style.UnderlineSpan;
+import android.webkit.WebSettings;
 
 import androidx.annotation.NonNull;
-
 public class Quote {
     private int id;
     private String quote;
@@ -49,26 +49,28 @@ public class Quote {
     @NonNull
     @Override
     public String toString() {
-        return String.format("Quote %d %s\n%s", getId(), getQuote(), getAuthor());
+        return String.format("Quote %d , %s , %s",id,quote,author);
     }
+    public Spannable info(){
 
-    public Spannable infos() {
         SpannableStringBuilder spannable = new SpannableStringBuilder(quote);
-        Spannable spannableAuthor = new SpannableString("\n→" + author);
-
         spannable.setSpan(
-                new ForegroundColorSpan(Color.BLUE),
+                new AbsoluteSizeSpan(30,true),
                 0,
-                spannable.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                1,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        return spannable;
+    }
+    public Spannable infoA(){
 
-        spannableAuthor.setSpan(new BackgroundColorSpan(Color.GRAY),
-                2,
-                spannableAuthor.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        spannable.insert(spannable.length(), spannableAuthor);
-
+        SpannableStringBuilder spannable = new SpannableStringBuilder(author);
+        spannable.setSpan(
+                new UnderlineSpan(),
+                0,
+                author.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
         return spannable;
     }
 }
