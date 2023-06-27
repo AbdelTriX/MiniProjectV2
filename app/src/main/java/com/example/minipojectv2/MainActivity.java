@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tvStartActQuote = findViewById(R.id.tvStartActQuote);
         tvStartActAuthor = findViewById(R.id.tvStartActAuthor);
-        pass = findViewById(R.idEX0.pass);
+        pass = findViewById(R.id.pass);
         tbStartActPinUnpin = findViewById(R.id.tbStartActPinUnpin);
         ivStartActIsFavorite = findViewById(R.id.ivStartActIsFavorite);
         tvStartActid = findViewById(R.id.tvStartActid);
